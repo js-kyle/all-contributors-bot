@@ -57,6 +57,13 @@ const handler = thundra(async (event, context) => {
         event.headers['x-github-event'] || event.headers['X-GitHub-Event']
     const payload = getPayload(event.body)
 
+    if (!payload) {
+        return {
+            statusCode: 400,
+            body: 'Request body is required',
+        } 
+    }
+
     if (name === 'installation') {
         await trackInstall(payload)
 

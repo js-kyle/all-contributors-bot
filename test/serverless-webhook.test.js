@@ -31,11 +31,27 @@ describe('Serverless Webhook', () => {
             headers: {
                 'x-github-event': 'lol',
             },
+            body: {
+                action: 'not-an-issue',
+            },
         }
         const spy = jest.spyOn(serverlessWebhook, 'invokeLambda')
         const response = await serverlessWebhook.handler(mockEvent, mockContext)
         expect(spy).toHaveBeenCalledTimes(0)
         expect(response.body).toEqual('Not an issue comment, exiting')
+    })
+
+    test('If no request body, exit', async () => {
+        const mockEvent = {
+            headers: {
+                'x-github-event': 'lol',
+            },
+        }
+        const spy = jest.spyOn(serverlessWebhook, 'invokeLambda')
+        const response = await serverlessWebhook.handler(mockEvent, mockContext)
+        expect(spy).toHaveBeenCalledTimes(0)
+        expect(response.body).toEqual('Request body is required')
+        expect(response.statusCode).toEqual(400)
     })
 
     test('If an issue comment, but not created, exit', async () => {
