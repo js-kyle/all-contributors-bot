@@ -112,7 +112,7 @@ describe('All Contributors app - End to end', () => {
         })
     })
 
-    test('2:Happy path, add correct new contributor, no allcontributors file (repo needs init first)', async () => {
+    test.only('2:Happy path, add correct new contributor, no allcontributors file (repo needs init first)', async () => {
         jest.setTimeout(10000)
 
         nock('https://api.github.com')

@@ -115,7 +115,10 @@ class Repository {
 
     async createFile({ filePath, content, branchName }) {
         const contentBinary = Buffer.from(content).toString('base64')
-
+        const branchNameExists = branchName === this.baseBranch
+        if (!branchNameExists) {
+            await this.createBranch(branchName)
+        }
         //octokit.github.io/rest.js/#api-Repos-createFile
         await this.github.repos.createFile({
             owner: this.owner,

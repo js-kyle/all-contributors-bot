@@ -30,9 +30,22 @@ class ContentFiles {
         const options = optionsConfig.get()
         if (options.files.length > 15) {
             throw new AllContributorBotError(
-                `Your .all-contributorsrc cannot contain more than 5 files.`,
+                `Your .all-contributorsrc cannot contain more than 15 files.`,
             )
         }
+        this.contentFilesByPath = await this.repository.getMultipleFiles(
+            options.files,
+        )
+    }
+
+    async create(optionsConfig, branch) {
+        const options = optionsConfig.get()
+        await this.repository.createFile({
+            filePath: options.files[0],
+            content: '',
+            branchName: branch,
+        })
+        this.repository.setBaseBranch(branch)
         this.contentFilesByPath = await this.repository.getMultipleFiles(
             options.files,
         )

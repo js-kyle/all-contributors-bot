@@ -47,7 +47,17 @@ async function processAddContributor({
     const contentFiles = new ContentFiles({
         repository,
     })
-    await contentFiles.fetch(optionsConfig)
+
+    try {
+        await contentFiles.fetch(optionsConfig)
+    } catch (error) {
+        if (error instanceof ResourceNotFoundError) {
+            await contentFiles.create(optionsConfig, branchName)
+            contentFiles.init()
+        } else {
+            throw error
+        }
+    }
     if (optionsConfig.getOriginalSha() === undefined) {
         contentFiles.init()
     }
